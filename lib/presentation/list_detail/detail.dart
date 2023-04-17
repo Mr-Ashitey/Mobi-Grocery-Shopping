@@ -10,6 +10,11 @@ class ListDetail extends StatelessWidget {
       appBar: AppBar(
         title: Text(listTitle),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {},
+        icon: const Icon(Icons.add),
+        label: const Text("ADD"),
+      ),
     );
   }
 }
