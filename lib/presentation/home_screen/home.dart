@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobi_grocery_shopping/core/utils/bottom_modal.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -37,7 +38,12 @@ class Home extends StatelessWidget {
                 ),
               ],
             ),
-            trailing: const Icon(Icons.more_vert_rounded),
+            trailing: IconButton(
+              icon: const Icon(Icons.more_vert_rounded),
+              onPressed: () {
+                context.showItemOptions(itemName: "Item $itemCount");
+              },
+            ),
           );
         },
         separatorBuilder: (context, index) => const SizedBox(height: 12),
