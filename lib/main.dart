@@ -7,7 +7,9 @@ void main() {
     MaterialApp(
       theme: ThemeData(
           fontFamily: "SF Pro",
-          appBarTheme: const AppBarTheme(color: Colors.black)),
+          appBarTheme: const AppBarTheme(color: Colors.black),
+          floatingActionButtonTheme: const FloatingActionButtonThemeData(
+              backgroundColor: Colors.black)),
       home: const SplashScreen(),
     ),
   );
