@@ -78,9 +78,11 @@ class _HomeState extends State<Home> {
         onPressed: () {
           // clear controller of any values
           textController.clear();
+
           context.showAddNewListDialog(
               controller: textController,
               onPressed: () {
+                // check if text is empty
                 if (textController.text.isEmpty) {
                   return;
                 }
