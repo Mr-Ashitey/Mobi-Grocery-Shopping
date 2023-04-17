@@ -9,7 +9,9 @@ void main() {
           fontFamily: "SF Pro",
           appBarTheme: const AppBarTheme(color: Colors.black),
           floatingActionButtonTheme: const FloatingActionButtonThemeData(
-              backgroundColor: Colors.black)),
+            backgroundColor: Colors.black,
+            extendedTextStyle: TextStyle(fontWeight: FontWeight.w600),
+          )),
       home: const SplashScreen(),
     ),
   );

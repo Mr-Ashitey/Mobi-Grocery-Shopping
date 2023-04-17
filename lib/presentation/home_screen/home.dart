@@ -93,10 +93,7 @@ class _HomeState extends State<Home> {
               });
         },
         icon: const Icon(Icons.add),
-        label: const Text(
-          "NEW LIST",
-          style: TextStyle(fontWeight: FontWeight.w600),
-        ),
+        label: const Text("NEW LIST"),
       ),
     );
   }
