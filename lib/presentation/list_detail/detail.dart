@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobi_grocery_shopping/core/utils/add_item_util.dart';
 
 class ListDetail extends StatelessWidget {
   final String listTitle;
@@ -43,7 +44,9 @@ class ListDetail extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          context.showAddItemDialog();
+        },
         icon: const Icon(Icons.add),
         label: const Text("ADD"),
       ),
