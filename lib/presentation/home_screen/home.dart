@@ -2,8 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:mobi_grocery_shopping/core/utils/alert.dart';
 import 'package:mobi_grocery_shopping/core/utils/bottom_modal.dart';
 
-class Home extends StatelessWidget {
+import '../list_detail/detail.dart';
+
+class Home extends StatefulWidget {
   const Home({super.key});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  late TextEditingController textController;
+
+  @override
+  void initState() {
+    textController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    textController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +35,9 @@ class Home extends StatelessWidget {
         itemCount: 10,
         itemBuilder: (_, itemCount) {
           return ListTile(
+            tileColor: Colors.black12,
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-            tileColor: Colors.black12,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             title: Text(
@@ -45,13 +66,29 @@ class Home extends StatelessWidget {
                 context.showItemOptions(itemName: "Item $itemCount");
               },
             ),
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => ListDetail(listTitle: "Item $itemCount")));
+            },
           );
         },
         separatorBuilder: (context, index) => const SizedBox(height: 12),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          context.showAddNewListDialog(controller: null, onPressed: null);
+          // clear controller of any values
+          textController.clear();
+          context.showAddNewListDialog(
+              controller: textController,
+              onPressed: () {
+                if (textController.text.isEmpty) {
+                  return;
+                }
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (_) => ListDetail(
+                          listTitle: textController.text,
+                        )));
+              });
         },
         icon: const Icon(Icons.add),
         label: const Text(
