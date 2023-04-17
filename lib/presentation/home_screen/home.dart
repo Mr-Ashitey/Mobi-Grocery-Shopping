@@ -7,18 +7,19 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("My Grocery Lists")),
-      body: ListView(
+      body: ListView.separated(
         padding: const EdgeInsets.all(10),
-        children: [
-          ListTile(
+        itemCount: 10,
+        itemBuilder: (_, itemCount) {
+          return ListTile(
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
             tileColor: Colors.black12,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            title: const Text(
-              "Item 1",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+            title: Text(
+              "Item $itemCount",
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
             ),
             subtitle: Row(
               children: const [
@@ -37,8 +38,9 @@ class Home extends StatelessWidget {
               ],
             ),
             trailing: const Icon(Icons.more_vert_rounded),
-          ),
-        ],
+          );
+        },
+        separatorBuilder: (context, index) => const SizedBox(height: 12),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {},
