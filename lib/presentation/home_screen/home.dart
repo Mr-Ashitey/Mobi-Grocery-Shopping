@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobi_grocery_shopping/core/utils/alert.dart';
 import 'package:mobi_grocery_shopping/core/utils/bottom_modal.dart';
 
 class Home extends StatelessWidget {
@@ -49,7 +50,9 @@ class Home extends StatelessWidget {
         separatorBuilder: (context, index) => const SizedBox(height: 12),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          context.showAddNewListDialog(controller: null, onPressed: null);
+        },
         icon: const Icon(Icons.add),
         label: const Text(
           "NEW LIST",
