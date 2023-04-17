@@ -1,7 +1,29 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
-class SplashScreen extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:mobi_grocery_shopping/presentation/home_screen/home.dart';
+
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    navigateToHomeScreenAfter3Seconds();
+    super.initState();
+  }
+
+// function to display splash screen for 3 seconds
+  void navigateToHomeScreenAfter3Seconds() {
+    Timer(const Duration(seconds: 3), () async {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => const Home()));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
