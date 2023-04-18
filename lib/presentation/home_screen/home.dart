@@ -6,27 +6,8 @@ import 'package:mobi_grocery_shopping/core/utils/bottom_modal.dart';
 
 import '../list_detail/detail.dart';
 
-class Home extends StatefulWidget {
+class Home extends StatelessWidget {
   const Home({super.key});
-
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  late TextEditingController textController;
-
-  @override
-  void initState() {
-    textController = TextEditingController();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    textController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +20,7 @@ class _HomeState extends State<Home> {
           final groceryItems = groceryList[itemCount].items;
           final collectedGroceryItems =
               getCollectedGroceryItems(groceryItems ?? []);
+
           return ListTile(
             tileColor: Colors.black12,
             contentPadding:
@@ -54,7 +36,9 @@ class _HomeState extends State<Home> {
                 SizedBox(
                   width: 150,
                   child: LinearProgressIndicator(
-                    value: collectedGroceryItems.length / groceryItems!.length,
+                    value: groceryItems!.isEmpty
+                        ? 0
+                        : collectedGroceryItems.length / groceryItems.length,
                     minHeight: 5,
                   ),
                 ),
@@ -75,8 +59,8 @@ class _HomeState extends State<Home> {
             ),
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => ListDetail(
-                      listTitle: groceryList[itemCount].name ?? "")));
+                  builder: (_) =>
+                      ListDetail(groceryId: groceryList[itemCount].id ?? 0)));
             },
           );
         },
@@ -84,21 +68,13 @@ class _HomeState extends State<Home> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          // clear controller of any values
-          textController.clear();
+          context.showAddNewListDialog(onPressed: (newName) {
+            // create new grocery list
+            final newId = createGroceryList(newName);
 
-          context.showAddNewListDialog(
-              controller: textController,
-              onPressed: () {
-                // check if text is empty
-                if (textController.text.isEmpty) {
-                  return;
-                }
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (_) => ListDetail(
-                          listTitle: textController.text,
-                        )));
-              });
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (_) => ListDetail(groceryId: newId)));
+          });
         },
         icon: const Icon(Icons.add),
         label: const Text("NEW LIST"),
