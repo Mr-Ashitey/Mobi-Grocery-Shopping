@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 extension ShowAlert on BuildContext {
-  void showAddItemDialog() {
+  void showItemDialog({bool isEdit = false}) {
     showDialog(
         context: this,
         builder: (_) {
           return AlertDialog(
-            title: const Text(
-              "Add Item",
-              style: TextStyle(fontWeight: FontWeight.w800),
+            title: Text(
+              isEdit ? "Edit Item" : "Add Item",
+              style: const TextStyle(fontWeight: FontWeight.w800),
             ),
             content: Autocomplete(
               // displayStringForOption: (option) => option.name,
@@ -29,7 +29,7 @@ extension ShowAlert on BuildContext {
               optionsViewBuilder: (context, onSelected, options) => Align(
                 alignment: Alignment.topLeft,
                 child: Material(
-                  child: Container(
+                  child: SizedBox(
                     width: 300,
                     // color: Colors.teal,
                     child: ListView.builder(
@@ -61,9 +61,9 @@ extension ShowAlert on BuildContext {
                     Icons.local_grocery_store_rounded,
                     color: Colors.black,
                   ),
-                  label: const Text(
-                    "Add Shopping Item",
-                    style: TextStyle(color: Colors.black),
+                  label: Text(
+                    isEdit ? "Edit Shopping Item" : "Add Shopping Item",
+                    style: const TextStyle(color: Colors.black),
                   ))
             ],
           );
