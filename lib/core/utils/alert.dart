@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 extension ShowAlert on BuildContext {
-  void showAddNewListDialog(
-      {TextEditingController? controller, VoidCallback? onPressed}) {
+  void showAddNewListDialog({Function(String)? onPressed}) {
+    TextEditingController controller = TextEditingController();
     showDialog(
         context: this,
         builder: (_) {
@@ -21,7 +21,13 @@ extension ShowAlert on BuildContext {
             ),
             actions: [
               TextButton.icon(
-                  onPressed: onPressed,
+                  onPressed: () {
+                    // check if text is empty
+                    if (controller.text.isEmpty) {
+                      return;
+                    }
+                    onPressed!(controller.text);
+                  },
                   icon: const Icon(
                     Icons.check,
                     color: Colors.black,
