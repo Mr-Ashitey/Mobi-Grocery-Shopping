@@ -1,32 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:mobi_grocery_shopping/core/helper_functions.dart';
 import 'package:mobi_grocery_shopping/core/utils/add_item_util.dart';
 
 class ListDetail extends StatelessWidget {
-  final String listTitle;
-  const ListDetail({super.key, required this.listTitle});
+  final int groceryId;
+  const ListDetail({super.key, required this.groceryId});
 
   @override
   Widget build(BuildContext context) {
+    final groceryList = findGroceryList(groceryId);
+    final collectedGroceryItems =
+        getCollectedGroceryItems(groceryList!.items ?? []);
     return Scaffold(
       appBar: AppBar(
-        title: Text(listTitle),
+        title: Text(groceryList.name ?? ""),
       ),
       body: Column(
         children: [
           const SizedBox(height: 10),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: const LinearProgressIndicator(
-              value: 0.5,
+            child: LinearProgressIndicator(
+              value: groceryList.items!.isEmpty
+                  ? 0
+                  : collectedGroceryItems.length / groceryList.items!.length,
               minHeight: 10,
             ),
           ),
           const SizedBox(height: 10),
+          if (groceryList.items!.isEmpty) const Text("Add item"),
           Expanded(
             child: ListView.separated(
-              itemCount: 8,
+              itemCount: groceryList.items!.length,
               itemBuilder: (_, itemCount) {
+                final groceryItems = groceryList.items![itemCount];
                 return Slidable(
                   // Specify a key if the Slidable is dismissible.
                   key: const ValueKey(0),
@@ -62,11 +70,11 @@ class ListDetail extends StatelessWidget {
                   ),
                   child: CheckboxListTile(
                     onChanged: (changedValue) {},
-                    value: true,
+                    value: groceryItems.collected,
                     activeColor: Colors.green,
-                    title: const Text(
-                      "Bread",
-                      style: TextStyle(fontWeight: FontWeight.w700),
+                    title: Text(
+                      groceryItems.name!,
+                      style: const TextStyle(fontWeight: FontWeight.w700),
                     ),
                     secondary: const Icon(Icons.local_grocery_store_rounded),
                     checkboxShape: const CircleBorder(),
