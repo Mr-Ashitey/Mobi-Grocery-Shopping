@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobi_grocery_shopping/core/model/grocery_model.dart';
 
 extension ShowAlert on BuildContext {
   void showItemDialog({bool isEdit = false}) {
@@ -10,10 +11,15 @@ extension ShowAlert on BuildContext {
               isEdit ? "Edit Item" : "Add Item",
               style: const TextStyle(fontWeight: FontWeight.w800),
             ),
-            content: Autocomplete(
-              // displayStringForOption: (option) => option.name,
+            content: Autocomplete<GroceryItem>(
+              displayStringForOption: (groceryItem) => groceryItem.name!,
               optionsBuilder: (textEditingValue) {
-                return [textEditingValue.text];
+                return groceryList.first.items!
+                    .where((groceryItem) => groceryItem.name!
+                        .toLowerCase()
+                        .startsWith(textEditingValue.text.toLowerCase()))
+                    .toList();
+                // return [textEditingValue.text];
               },
               fieldViewBuilder: (context, textEditingController, focusNode,
                       onFieldSubmitted) =>
@@ -26,26 +32,29 @@ extension ShowAlert on BuildContext {
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.black))),
               ),
-              optionsViewBuilder: (context, onSelected, options) => Align(
-                alignment: Alignment.topLeft,
-                child: Material(
-                  child: SizedBox(
-                    width: 300,
-                    // color: Colors.teal,
-                    child: ListView.builder(
-                        itemCount: 10,
-                        padding: const EdgeInsets.all(10.0),
-                        itemBuilder: (_, index) {
-                          return GestureDetector(
-                            onTap: () => onSelected("Data"),
-                            child: const ListTile(
-                              title: Text("Data"),
-                            ),
-                          );
-                        }),
+              optionsViewBuilder: (context, onSelected, options) {
+                return Align(
+                  alignment: Alignment.topLeft,
+                  child: Material(
+                    child: SizedBox(
+                      width: 300, height: 300,
+                      // color: Colors.teal,
+                      child: ListView.builder(
+                          itemCount: options.length,
+                          padding: const EdgeInsets.all(10.0),
+                          itemBuilder: (_, index) {
+                            final option = options.elementAt(index);
+                            return GestureDetector(
+                              onTap: () => onSelected(option),
+                              child: ListTile(
+                                title: Text(option.name!),
+                              ),
+                            );
+                          }),
+                    ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
             // content: const TextField(
             //   cursorColor: Colors.black,
