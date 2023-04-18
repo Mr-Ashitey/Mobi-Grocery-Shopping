@@ -3,16 +3,16 @@ class GroceryList {
   String? name;
   List<GroceryItem>? items;
 
-  GroceryList({required this.id, required this.name, required this.items});
+  GroceryList({required this.id, required this.name, this.items = const []});
 
   GroceryList.fromJson(Map<String, dynamic> json) {
     name = json['name'];
-    if (json['items'] != null) {
-      items = <GroceryItem>[];
-      json['items'].forEach((v) {
-        items!.add(GroceryItem.fromJson(v));
-      });
-    }
+    // if (json['items'] != null) {
+    // items = <GroceryItem>[];
+    json['items'].forEach((v) {
+      items!.add(GroceryItem.fromJson(v));
+    });
+    // }
   }
 
   Map<String, dynamic> toJson() {
