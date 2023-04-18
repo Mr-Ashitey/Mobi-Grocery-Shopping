@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mobi_grocery_shopping/core/helper_functions.dart';
 
 extension ShowBottomModal on BuildContext {
-  void showItemOptions({required String itemName}) {
+  void showItemOptions({required int groceryId, required String itemName}) {
+    TextEditingController textEditingController =
+        TextEditingController(text: itemName);
     showModalBottomSheet(
         context: this,
         constraints:
@@ -15,20 +18,36 @@ extension ShowBottomModal on BuildContext {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 25),
-              Text(
-                itemName,
-                style: const TextStyle(fontSize: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                child: TextField(
+                  controller: textEditingController,
+                  cursorColor: Colors.black,
+                  textCapitalization: TextCapitalization.words,
+                  decoration: const InputDecoration(
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black))),
+                ),
               ),
               const SizedBox(height: 35),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        // rename grocery list
+                        renameGroceryList(
+                            groceryId, textEditingController.text);
+                        Navigator.pop(this);
+                      },
                       icon: const Icon(Icons.edit),
                       label: const Text("Rename")),
                   ElevatedButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        // remove grocery list
+                        removeGroceryList(groceryId);
+                        Navigator.pop(this);
+                      },
                       style: ElevatedButton.styleFrom(
                           backgroundColor:
                               const Color.fromARGB(255, 176, 53, 45)),
