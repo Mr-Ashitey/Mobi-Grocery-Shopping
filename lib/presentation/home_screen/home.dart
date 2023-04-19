@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mobi_grocery_shopping/core/helper_functions.dart';
 import 'package:mobi_grocery_shopping/core/model/grocery_model.dart';
 import 'package:mobi_grocery_shopping/core/utils/alert.dart';
 import 'package:mobi_grocery_shopping/core/utils/bottom_modal.dart';
+import 'package:mobi_grocery_shopping/core/viewModels/grocery_manager.dart';
+import 'package:provider/provider.dart';
 
 import '../list_detail/detail.dart';
 
@@ -11,15 +12,15 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final groceryManager = context.read<GroceryListManager>();
+    final groceryLists = context.watch<GroceryListManager>().groceryLists;
     return Scaffold(
       appBar: AppBar(title: const Text("My Grocery Lists")),
       body: ListView.separated(
         padding: const EdgeInsets.all(10),
-        itemCount: groceryList.length,
+        itemCount: groceryLists.length,
         itemBuilder: (_, itemCount) {
-          final groceryItems = groceryList[itemCount].items;
-          final collectedGroceryItems =
-              getCollectedGroceryItems(groceryItems ?? []);
+          final groceryItems = groceryLists[itemCount].items;
 
           return ListTile(
             tileColor: Colors.black12,
@@ -28,7 +29,7 @@ class Home extends StatelessWidget {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             title: Text(
-              groceryList[itemCount].name ?? "",
+              groceryLists[itemCount].name ?? "",
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
             ),
             subtitle: Row(
@@ -38,13 +39,14 @@ class Home extends StatelessWidget {
                   child: LinearProgressIndicator(
                     value: groceryItems!.isEmpty
                         ? 0
-                        : collectedGroceryItems.length / groceryItems.length,
+                        : groceryLists[itemCount].numItemsCollected /
+                            groceryLists[itemCount].numItems,
                     minHeight: 5,
                   ),
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  "${collectedGroceryItems.length} / ${groceryItems.length}",
+                  "${groceryLists[itemCount].numItemsCollected} / ${groceryLists[itemCount].numItems}",
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
@@ -53,14 +55,14 @@ class Home extends StatelessWidget {
               icon: const Icon(Icons.more_vert_rounded),
               onPressed: () {
                 context.showItemOptions(
-                    groceryId: groceryList[itemCount].id ?? 0,
-                    itemName: groceryList[itemCount].name ?? "");
+                    groceryId: groceryLists[itemCount].id ?? "",
+                    itemName: groceryLists[itemCount].name ?? "");
               },
             ),
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (_) =>
-                      ListDetail(groceryId: groceryList[itemCount].id ?? 0)));
+                      ListDetail(groceryId: groceryLists[itemCount].id ?? "")));
             },
           );
         },
@@ -70,10 +72,12 @@ class Home extends StatelessWidget {
         onPressed: () {
           context.showAddNewListDialog(onPressed: (newName) {
             // create new grocery list
-            final newId = createGroceryList(newName);
+            final newGroceryList = GroceryList(name: newName);
+            groceryManager.addGroceryList(newGroceryList);
 
+            // move to list detail
             Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (_) => ListDetail(groceryId: newId)));
+                builder: (_) => ListDetail(groceryId: newGroceryList.id!)));
           });
         },
         icon: const Icon(Icons.add),

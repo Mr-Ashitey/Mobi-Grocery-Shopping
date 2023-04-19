@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:mobi_grocery_shopping/core/helper_functions.dart';
+import 'package:mobi_grocery_shopping/core/model/grocery_model.dart';
 import 'package:mobi_grocery_shopping/core/utils/add_item_util.dart';
+import 'package:mobi_grocery_shopping/core/viewModels/grocery_manager.dart';
+import 'package:provider/provider.dart';
 
 class ListDetail extends StatelessWidget {
-  final int groceryId;
+  final String groceryId;
   const ListDetail({super.key, required this.groceryId});
 
   @override
   Widget build(BuildContext context) {
-    final groceryList = findGroceryList(groceryId);
-    final collectedGroceryItems =
-        getCollectedGroceryItems(groceryList!.items ?? []);
+    final groceryListManager = context.read<GroceryListManager>();
+    final groceryList =
+        context.watch<GroceryListManager>().findGroceryList(groceryId);
     return Scaffold(
       appBar: AppBar(
-        title: Text(groceryList.name ?? ""),
+        title: Text(groceryList!.name ?? ""),
       ),
       body: Column(
         children: [
@@ -24,7 +26,7 @@ class ListDetail extends StatelessWidget {
             child: LinearProgressIndicator(
               value: groceryList.items!.isEmpty
                   ? 0
-                  : collectedGroceryItems.length / groceryList.items!.length,
+                  : groceryList.numItemsCollected / groceryList.numItems,
               minHeight: 10,
             ),
           ),
@@ -34,10 +36,10 @@ class ListDetail extends StatelessWidget {
             child: ListView.separated(
               itemCount: groceryList.items!.length,
               itemBuilder: (_, itemCount) {
-                final groceryItems = groceryList.items![itemCount];
+                final groceryItem = groceryList.items![itemCount];
                 return Slidable(
                   // Specify a key if the Slidable is dismissible.
-                  key: const ValueKey(0),
+                  key: ValueKey(groceryItem.id),
 
                   // The start action pane is the one at the left or the top side.
                   endActionPane: ActionPane(
@@ -52,7 +54,12 @@ class ListDetail extends StatelessWidget {
                       // A SlidableAction can have an icon and/or a label.
                       SlidableAction(
                         onPressed: (_) {
-                          context.showItemDialog(isEdit: true);
+                          context.showItemDialog(
+                            isEdit: true,
+                            itemName: groceryItem.name!,
+                            listId: groceryList.id!,
+                            itemId: groceryItem.id,
+                          );
                         },
                         backgroundColor: Colors.blue,
                         foregroundColor: Colors.white,
@@ -60,7 +67,10 @@ class ListDetail extends StatelessWidget {
                         label: 'Edit',
                       ),
                       SlidableAction(
-                        onPressed: (_) {},
+                        onPressed: (_) {
+                          groceryListManager.removeGroceryItem(
+                              groceryList.id!, groceryItem.id!);
+                        },
                         backgroundColor: const Color(0xFFFE4A49),
                         foregroundColor: Colors.white,
                         icon: Icons.delete,
@@ -69,11 +79,14 @@ class ListDetail extends StatelessWidget {
                     ],
                   ),
                   child: CheckboxListTile(
-                    onChanged: (changedValue) {},
-                    value: groceryItems.collected,
+                    onChanged: (changedValue) {
+                      groceryListManager.updateGroceryItemCollectedStatus(
+                          groceryList.id!, groceryItem.id!, changedValue!);
+                    },
+                    value: groceryItem.collected,
                     activeColor: Colors.green,
                     title: Text(
-                      groceryItems.name!,
+                      groceryItem.name!,
                       style: const TextStyle(fontWeight: FontWeight.w700),
                     ),
                     secondary: const Icon(Icons.local_grocery_store_rounded),
@@ -88,7 +101,7 @@ class ListDetail extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          context.showItemDialog();
+          context.showItemDialog(listId: groceryList.id!);
         },
         icon: const Icon(Icons.add),
         label: const Text("ADD"),

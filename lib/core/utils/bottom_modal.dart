@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mobi_grocery_shopping/core/helper_functions.dart';
+import 'package:mobi_grocery_shopping/core/viewModels/grocery_manager.dart';
+import 'package:provider/provider.dart';
 
 extension ShowBottomModal on BuildContext {
-  void showItemOptions({required int groceryId, required String itemName}) {
+  void showItemOptions({required String groceryId, required String itemName}) {
     TextEditingController textEditingController =
         TextEditingController(text: itemName);
     showModalBottomSheet(
@@ -36,7 +37,7 @@ extension ShowBottomModal on BuildContext {
                   ElevatedButton.icon(
                       onPressed: () {
                         // rename grocery list
-                        renameGroceryList(
+                        read<GroceryListManager>().renameGroceryList(
                             groceryId, textEditingController.text);
                         Navigator.pop(this);
                       },
@@ -45,7 +46,7 @@ extension ShowBottomModal on BuildContext {
                   ElevatedButton.icon(
                       onPressed: () {
                         // remove grocery list
-                        removeGroceryList(groceryId);
+                        read<GroceryListManager>().removeGroceryList(groceryId);
                         Navigator.pop(this);
                       },
                       style: ElevatedButton.styleFrom(
