@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:mobi_grocery_shopping/core/model/grocery_model.dart';
 import 'package:mobi_grocery_shopping/core/utils/add_item_util.dart';
 import 'package:mobi_grocery_shopping/core/viewModels/grocery_manager.dart';
 import 'package:provider/provider.dart';
+
+import '../screen_placeholder.dart';
 
 class ListDetail extends StatelessWidget {
   final String groceryId;
@@ -31,7 +32,8 @@ class ListDetail extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          if (groceryList.items!.isEmpty) const Text("Add item"),
+          if (groceryList.items!.isEmpty)
+            const ScreenPlaceHolder(title: "Add and Track Items"),
           Expanded(
             child: ListView.separated(
               itemCount: groceryList.items!.length,
