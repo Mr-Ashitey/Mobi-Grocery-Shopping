@@ -12,6 +12,7 @@ extension ShowAlert on BuildContext {
               style: TextStyle(fontWeight: FontWeight.w800),
             ),
             content: TextField(
+              key: const Key('add_new_list'),
               controller: controller,
               cursorColor: Colors.black,
               textCapitalization: TextCapitalization.words,
@@ -21,6 +22,7 @@ extension ShowAlert on BuildContext {
             ),
             actions: [
               TextButton.icon(
+                  key: const Key('add_new_list_btn'),
                   onPressed: () {
                     // check if text is empty
                     if (controller.text.isEmpty) {

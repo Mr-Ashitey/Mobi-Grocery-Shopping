@@ -83,6 +83,7 @@ extension ShowAlert on BuildContext {
             // ),
             actions: [
               TextButton.icon(
+                  key: const Key('new_item_btn'),
                   onPressed: () {
                     if (itemName.isEmpty) {
                       return;

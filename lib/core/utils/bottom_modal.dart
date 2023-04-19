@@ -23,6 +23,7 @@ extension ShowBottomModal on BuildContext {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 18.0),
                 child: TextField(
+                  key: const Key('grocery_list_name'),
                   controller: textEditingController,
                   cursorColor: Colors.black,
                   textCapitalization: TextCapitalization.words,
@@ -36,6 +37,7 @@ extension ShowBottomModal on BuildContext {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton.icon(
+                      key: const Key('rename_grocery_list'),
                       onPressed: () {
                         if (itemName == textEditingController.text) {
                           return;
@@ -50,6 +52,7 @@ extension ShowBottomModal on BuildContext {
                       icon: const Icon(Icons.edit),
                       label: const Text("Rename")),
                   ElevatedButton.icon(
+                      key: const Key('delete_grocery_list'),
                       onPressed: () {
                         // remove grocery list
                         read<GroceryListManager>().removeGroceryList(groceryId);
