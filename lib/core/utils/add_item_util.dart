@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mobi_grocery_shopping/core/model/grocery_model.dart';
+import 'package:mobi_grocery_shopping/core/viewModels/grocery_manager.dart';
+import 'package:provider/provider.dart';
 
 extension ShowAlert on BuildContext {
-  void showItemDialog({bool isEdit = false}) {
+  void showItemDialog(
+      {bool isEdit = false,
+      String itemName = '',
+      String? listId,
+      String? itemId}) {
     showDialog(
         context: this,
         builder: (_) {
@@ -14,38 +20,50 @@ extension ShowAlert on BuildContext {
             content: Autocomplete<GroceryItem>(
               displayStringForOption: (groceryItem) => groceryItem.name!,
               optionsBuilder: (textEditingValue) {
-                return groceryList.first.items!
+                if (textEditingValue.text.isEmpty) {
+                  return const Iterable<GroceryItem>.empty();
+                }
+                final allGroceryItems =
+                    read<GroceryListManager>().getAllGroceryItems();
+                return allGroceryItems
                     .where((groceryItem) => groceryItem.name!
                         .toLowerCase()
                         .startsWith(textEditingValue.text.toLowerCase()))
                     .toList();
-                // return [textEditingValue.text];
               },
               fieldViewBuilder: (context, textEditingController, focusNode,
-                      onFieldSubmitted) =>
-                  TextField(
-                controller: textEditingController,
-                focusNode: focusNode,
-                cursorColor: Colors.black,
-                textCapitalization: TextCapitalization.words,
-                decoration: const InputDecoration(
+                  onFieldSubmitted) {
+                textEditingController.text = itemName;
+                return TextFormField(
+                  controller: textEditingController,
+                  focusNode: focusNode,
+                  cursorColor: Colors.black,
+                  textCapitalization: TextCapitalization.words,
+                  decoration: const InputDecoration(
                     focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black))),
-              ),
+                        borderSide: BorderSide(color: Colors.black)),
+                  ),
+                  onChanged: (value) => itemName = value,
+                );
+              },
               optionsViewBuilder: (context, onSelected, options) {
                 return Align(
                   alignment: Alignment.topLeft,
                   child: Material(
+                    elevation: 2,
                     child: SizedBox(
-                      width: 300, height: 300,
-                      // color: Colors.teal,
+                      width: 300,
+                      height: 200,
                       child: ListView.builder(
                           itemCount: options.length,
-                          padding: const EdgeInsets.all(10.0),
+                          padding: EdgeInsets.zero,
                           itemBuilder: (_, index) {
                             final option = options.elementAt(index);
                             return GestureDetector(
-                              onTap: () => onSelected(option),
+                              onTap: () {
+                                onSelected(option);
+                                itemName = option.name!;
+                              },
                               child: ListTile(
                                 title: Text(option.name!),
                               ),
@@ -65,7 +83,21 @@ extension ShowAlert on BuildContext {
             // ),
             actions: [
               TextButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    if (itemName.isEmpty) {
+                      return;
+                    }
+                    if (isEdit) {
+                      read<GroceryListManager>()
+                          .renameGroceryItem(listId!, itemId!, itemName);
+                      Navigator.of(this).pop();
+                      return;
+                    }
+                    final newGroceryItem = GroceryItem(name: itemName);
+                    read<GroceryListManager>()
+                        .addGroceryItem(listId!, newGroceryItem);
+                    Navigator.of(this).pop();
+                  },
                   icon: const Icon(
                     Icons.local_grocery_store_rounded,
                     color: Colors.black,
