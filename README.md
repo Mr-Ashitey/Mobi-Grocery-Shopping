@@ -2,6 +2,10 @@
 
 The Mobi Grocery Shopping App is a mobile application built with Flutter that helps users keep track of their grocery lists and items. With this app, users can create new grocery lists, add items to existing lists, mark items as collected, and delete items from lists.
 
+## Screenshot
+![app shot](app_screenshot.png?raw=true 'Mobi Grocery Shopping')
+
+
 ## Running the Application
 
 To run the application, first make sure you have the Flutter SDK installed. Then, clone this repository and navigate to the project directory in your terminal. Run the following command to install the necessary dependencies:
