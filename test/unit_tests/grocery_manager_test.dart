@@ -47,16 +47,6 @@ void main() {
           equals('New Name'));
     });
 
-    // test(
-    //     'renameGroceryItem should throw an exception if item ID not found in list',
-    //     () {
-    //   groceryListManager.addGroceryList(groceryList);
-    //   expect(
-    //     () => groceryListManager.renameGroceryItem('1', '1', 'New Name'),
-    //     throwsA(isInstanceOf<Exception>()),
-    //   );
-    // });
-
     test('addGroceryItem should add a grocery item to a grocery list', () {
       // add grocery list
       groceryListManager.addGroceryList(groceryList);

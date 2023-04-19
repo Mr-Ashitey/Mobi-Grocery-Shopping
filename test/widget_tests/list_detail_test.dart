@@ -69,8 +69,8 @@ void main() {
     await tester.pumpAndSettle();
 
     final editIcon = find.byIcon(Icons.edit);
-    // final deleteIcons = find.byIcon(Icons.delete);
     expect(editIcon, findsOneWidget);
+
     await tester.tap(editIcon);
     await tester.pumpAndSettle();
 
@@ -79,7 +79,6 @@ void main() {
     await tester.pumpAndSettle();
 
     // Tap the add button to display the add item dialog.
-    // await tester.pumpAndSe÷ttle();
     expect(find.text('Renamed grocery item'), findsOneWidget);
   });
   testWidgets('can delete an existing grocery item', (tester) async {
@@ -96,7 +95,6 @@ void main() {
     await tester.pumpAndSettle();
 
     // Tap the add button to display the add item dialog.
-    // await tester.pumpAndSe÷ttle();
     expect(find.text(groceryItem.name!), findsNothing);
   });
 }

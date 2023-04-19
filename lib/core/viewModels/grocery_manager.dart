@@ -36,9 +36,6 @@ class GroceryListManager extends ChangeNotifier {
     if (itemIndex != -1) {
       groceryList.items![itemIndex].name = newName;
       notifyListeners();
-    } else {
-      // throw Exception(
-      //     'Item with ID $itemId not found in grocery list with ID $listId');
     }
   }
 
