@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobi_grocery_shopping/core/model/grocery_model.dart';
 import 'package:mobi_grocery_shopping/core/utils/alert.dart';
 import 'package:mobi_grocery_shopping/core/utils/bottom_modal.dart';
+import 'package:mobi_grocery_shopping/core/utils/notification.dart';
 import 'package:mobi_grocery_shopping/core/viewModels/grocery_manager.dart';
 import 'package:provider/provider.dart';
 
@@ -74,6 +75,9 @@ class Home extends StatelessWidget {
             // create new grocery list
             final newGroceryList = GroceryList(name: newName);
             groceryManager.addGroceryList(newGroceryList);
+
+            // show notification
+            context.showNotification(message: "$newName added");
 
             // move to list detail
             Navigator.of(context).pushReplacement(MaterialPageRoute(

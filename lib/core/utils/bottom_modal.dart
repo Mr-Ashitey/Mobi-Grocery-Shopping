@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobi_grocery_shopping/core/utils/notification.dart';
 import 'package:mobi_grocery_shopping/core/viewModels/grocery_manager.dart';
 import 'package:provider/provider.dart';
 
@@ -36,9 +37,14 @@ extension ShowBottomModal on BuildContext {
                 children: [
                   ElevatedButton.icon(
                       onPressed: () {
+                        if (itemName == textEditingController.text) {
+                          return;
+                        }
                         // rename grocery list
                         read<GroceryListManager>().renameGroceryList(
                             groceryId, textEditingController.text);
+
+                        showNotification(message: "Renamed successfully");
                         Navigator.pop(this);
                       },
                       icon: const Icon(Icons.edit),
@@ -47,6 +53,8 @@ extension ShowBottomModal on BuildContext {
                       onPressed: () {
                         // remove grocery list
                         read<GroceryListManager>().removeGroceryList(groceryId);
+
+                        showNotification(message: "Deleted successfully");
                         Navigator.pop(this);
                       },
                       style: ElevatedButton.styleFrom(
